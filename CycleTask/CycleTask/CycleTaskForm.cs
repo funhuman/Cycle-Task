@@ -6,7 +6,7 @@ namespace CycleTask
 {
     public partial class CycleTaskForm : Form
     {
-        public const string LogFilePath = @"C:\cycle_task.log"; // 设置日志文件位置
+        public const string LogFilePath = @"C:\temp\cycle_task.log"; // 设置日志文件位置
 
         private enum loadMode { todo, yellow, all, plan, grey, is_deleted, long_time }
         private bool dayMode = false;
@@ -37,7 +37,7 @@ namespace CycleTask
             {
                 sql += " is_deleted = 0 and red_line_days > 98";
             }
-            else if(mode == (int)loadMode.is_deleted)
+            else if (mode == (int)loadMode.is_deleted)
             {
                 sql += " is_deleted = 1";
             }
@@ -58,13 +58,13 @@ namespace CycleTask
                     now = DateTime.Now.AddDays(1);
                 }
                 else
-                { 
+                {
                     now = dateTimePicker1.Value;
                 }
             }
             foreach (DataGridViewRow dr in DataView.Rows)
             {
-                
+
                 isColor = isYellow = false;
                 // 设置蓝色
                 if (Convert.ToDateTime(dr.Cells[2].Value).AddDays(Convert.ToInt32(dr.Cells[3].Value)) < now)
@@ -175,19 +175,9 @@ namespace CycleTask
 
         private void DataView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            try
-            {
-                CycleTaskManage.select_task_id = Convert.ToInt32(DataView.SelectedRows[0].Cells[0].Value);
-            }
-            catch (Exception)
-            {
-                CycleTaskManage.select_task_id = 0;
-            }
-            finally
-            {
-                new CycleTaskManage().ShowDialog();
-            }
+            button5_Click(sender, e);
         }
+
         private void addDateTimePickerWheelEvent(Control[] controls)
         {
             foreach (var control in controls)
@@ -211,7 +201,7 @@ namespace CycleTask
         {
             time++;
             if (time >= 120)
-            { 
+            {
                 Hide();
             }
         }

@@ -18,6 +18,7 @@ namespace CycleTask
         {
             bind();
             comboBox1.SelectedValue = select_task_id;
+            comboBox1_SelectedIndexChanged(sender, e);
         }
 
         private void bind()
@@ -68,17 +69,24 @@ namespace CycleTask
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedValue.ToString() == null)
+            try
             {
-                return;
+                if (comboBox1.SelectedValue.ToString() == null)
+                {
+                    return;
+                }
+                if (checkLine())
+                {
+                    return;
+                }
+                string sql = $"update cycle_task set task_name = '{textBox1.Text}', yellow_line_days = '{textBox2.Text}', red_line_days = '{textBox3.Text}', update_time = getdate() where task_id = {comboBox1.SelectedValue.ToString()}";
+                DBHelper.Query(sql);
+                label4.Text = textBox1.Text + "修改成功！";
             }
-            if (checkLine())
+            catch (Exception)
             {
-                return;
+                label4.Text = textBox1.Text + "修改失败！";
             }
-            string sql = $"update cycle_task set task_name = '{textBox1.Text}', yellow_line_days = '{textBox2.Text}', red_line_days = '{textBox3.Text}', update_time = getdate() where task_id = {comboBox1.SelectedValue.ToString()}";
-            DBHelper.Query(sql);
-            label4.Text = textBox1.Text + "修改成功！";
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -93,6 +101,12 @@ namespace CycleTask
             DBHelper.Query(sql);
             bind();
             comboBox1.SelectedIndex = tmp;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = textBox2.Text = textBox3.Text = "";
+            label4.Text = "清空成功！";
         }
     }
 }
